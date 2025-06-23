@@ -1,0 +1,59 @@
+@page "/customers/edit/{id:int}"
+@inject CustomerService CustomerService
+@inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.Components.Forms
+
+<h3>Edit Customer</h3>
+
+@if (customer == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <EditForm Model="customer" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label>Name</label>
+            <InputText class="form-control" @bind-Value="customer.Name" />
+        </div>
+        <div class="mb-3">
+            <label>Email</label>
+            <InputText class="form-control" @bind-Value="customer.Email" />
+        </div>
+        <div class="mb-3">
+            <label>Phone</label>
+            <InputText class="form-control" @bind-Value="customer.Phone" />
+        </div>
+        <div class="mb-3">
+            <label>Service Type</label>
+            <InputText class="form-control" @bind-Value="customer.ServiceType" />
+        </div>
+        <div class="mb-3">
+            <label>Notes</label>
+            <InputTextArea class="form-control" @bind-Value="customer.Notes" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Save</button>
+        <a href="/customers" class="btn btn-secondary ms-2">Cancel</a>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    private Customer? customer;
+
+    protected override void OnInitialized()
+    {
+        customer = CustomerService.GetById(id);
+    }
+
+    private void HandleValidSubmit()
+    {
+        CustomerService.Update(customer!);
+        NavigationManager.NavigateTo("/customers");
+    }
+}
