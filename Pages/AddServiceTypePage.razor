@@ -1,0 +1,36 @@
+@page "/services/add"
+@inject ServiceTypeService ServiceTypeService
+@inject NavigationManager NavigationManager
+
+@using Microsoft.AspNetCore.Components.Forms
+
+<h3>Add Service Type</h3>
+
+<EditForm Model="newService" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label>Service Name</label>
+        <InputText class="form-control" @bind-Value="newService.Name" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Save</button>
+    <a href="/customers" class="btn btn-secondary ms-2">Cancel</a>
+</EditForm>
+
+@code {
+    private ServiceType newService = new()
+    {
+        Name = ""
+    };
+
+    private void HandleValidSubmit()
+    {
+        if (!string.IsNullOrWhiteSpace(newService.Name))
+        {
+            ServiceTypeService.Add(newService);
+            NavigationManager.NavigateTo("/customers"); // or redirect to a future /services page
+        }
+    }
+}
