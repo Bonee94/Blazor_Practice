@@ -811,7 +811,6 @@ C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\obj\Debug\net9.0\scop
 C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\obj\Debug\net9.0\blazor.build.boot-extension.json
 C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\obj\Debug\net9.0\blazor.boot.json
 C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\obj\Debug\net9.0\compressed\za3fysw24s-8rbvw3on5j.gz
-C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\obj\Debug\net9.0\compressed\2oh4fftrnb-lkdtkf77j0.gz
 C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\obj\Debug\net9.0\compressed\r9v9yxpn8f-bqjiyaj88i.gz
 C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\obj\Debug\net9.0\compressed\kbqmtfzjwd-c2jlpeoesf.gz
 C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\obj\Debug\net9.0\compressed\ky1egq3vwh-erw9l3u2r3.gz
@@ -1069,10 +1068,12 @@ C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\obj\Debug\net9.0\Blaz
 C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\obj\Debug\net9.0\refint\BlazorDemoApp.dll
 C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\obj\Debug\net9.0\BlazorDemoApp.pdb
 C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\obj\Debug\net9.0\ref\BlazorDemoApp.dll
-C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\bin\Debug\net9.0\wwwroot\_framework\BlazorDemoApp.rljat19w3s.wasm
-C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\bin\Debug\net9.0\wwwroot\_framework\BlazorDemoApp.v6pn0b2rue.pdb
-C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\bin\Debug\net9.0\wwwroot\_framework\BlazorDemoApp.rljat19w3s.wasm.gz
-C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\bin\Debug\net9.0\wwwroot\_framework\BlazorDemoApp.v6pn0b2rue.pdb.gz
-C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\obj\Debug\net9.0\compressed\fony23lz5u-rljat19w3s.gz
-C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\obj\Debug\net9.0\compressed\abtczdzkgt-v6pn0b2rue.gz
-C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\obj\Debug\net9.0\compressed\cxluc5dsfp-qtjsf2tzcp.gz
+C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\obj\Debug\net9.0\BlazorDemoApp.sourcelink.json
+C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\obj\Debug\net9.0\compressed\2oh4fftrnb-g4rddcp966.gz
+C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\bin\Debug\net9.0\wwwroot\_framework\BlazorDemoApp.4zzh7zzjwx.wasm
+C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\bin\Debug\net9.0\wwwroot\_framework\BlazorDemoApp.1f1601b0an.pdb
+C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\bin\Debug\net9.0\wwwroot\_framework\BlazorDemoApp.4zzh7zzjwx.wasm.gz
+C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\bin\Debug\net9.0\wwwroot\_framework\BlazorDemoApp.1f1601b0an.pdb.gz
+C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\obj\Debug\net9.0\compressed\fony23lz5u-4zzh7zzjwx.gz
+C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\obj\Debug\net9.0\compressed\abtczdzkgt-1f1601b0an.gz
+C:\Users\Owner\Coding Projects\.NET Practice\BlazorDemoApp\obj\Debug\net9.0\compressed\cxluc5dsfp-vlben4ko8g.gz
