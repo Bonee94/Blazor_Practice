@@ -1,6 +1,7 @@
 @page "/customers/edit/{id:int}"
 @inject CustomerService CustomerService
 @inject NavigationManager NavigationManager
+@inject ServiceTypeService ServiceTypeService
 @using Microsoft.AspNetCore.Components.Forms
 
 <h3>Edit Customer</h3>
@@ -27,33 +28,111 @@ else
             <label>Phone</label>
             <InputText class="form-control" @bind-Value="customer.Phone" />
         </div>
-        <div class="mb-3">
-            <label>Service Type</label>
-            <InputText class="form-control" @bind-Value="customer.ServiceType" />
-        </div>
-        <div class="mb-3">
-            <label>Notes</label>
-            <InputTextArea class="form-control" @bind-Value="customer.Notes" />
-        </div>
 
-        <button type="submit" class="btn btn-success">Save</button>
-        <a href="/customers" class="btn btn-secondary ms-2">Cancel</a>
+        <button class="btn btn-sm btn-outline-primary mb-3" type="button" @onclick="ShowJobForm">
+            <i class="bi bi-plus-circle me-1"></i> Add Job
+        </button>
+
+        @if (showJobForm)
+        {
+            <EditForm Model="newJob" OnValidSubmit="AddJob" Context="JobContext">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="border p-3 mb-3 bg-white rounded">
+                    <div class="mb-2">
+                        <label>Date Completed</label>
+                        <InputDate class="form-control" @bind-Value="newJob.DateCompleted" />
+                    </div>
+
+                    <div class="mb-2">
+                        <label>Service Type</label>
+                        <InputSelect class="form-control" @bind-Value="newJob.ServiceType">
+                            <option value="">-- Select a service --</option>
+                            @foreach (var service in serviceTypes)
+                            {
+                                <option value="@service.Name">@service.Name</option>
+                            }
+                        </InputSelect>
+                    </div>
+
+                    <div class="mb-2">
+                        <label>Note</label>
+                        <InputTextArea class="form-control" @bind-Value="newJob.Note" />
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-sm me-2">Save Job</button>
+                    <button type="button" class="btn btn-secondary btn-sm" @onclick="CancelJobForm">Cancel</button>
+                </div>
+            </EditForm>
+        }
+
+        @if (customer.Jobs?.Count > 0)
+        {
+            <h5>Job History</h5>
+            @for (int i = 0; i < customer.Jobs.Count; i++)
+            {
+                <JobEditForm Job="customer.Jobs[i]" ServiceTypes="serviceTypes" OnValidSubmit="@(() => SaveJob(i))" />
+            }
+        }
+
+        <button type="submit" class="btn btn-success">Save Customer</button>
+        <a href="/" class="btn btn-secondary ms-2">Cancel</a>
     </EditForm>
+    <br />
 }
 
 @code {
-    [Parameter]
-    public int id { get; set; }
+    [Parameter] public int id { get; set; }
+
     private Customer? customer;
+    private List<ServiceType> serviceTypes = new();
+
+    private bool showJobForm = false;
+    private Job newJob = new();
 
     protected override void OnInitialized()
     {
         customer = CustomerService.GetById(id);
+        serviceTypes = ServiceTypeService.GetAll();
+    }
+
+    private void ShowJobForm()
+    {
+        showJobForm = true;
+        newJob = new Job
+        {
+            DateCompleted = DateTime.Today
+        };
+    }
+
+    private void CancelJobForm()
+    {
+        showJobForm = false;
+        newJob = new();
+    }
+
+    private void AddJob()
+    {
+        if (customer != null && !string.IsNullOrWhiteSpace(newJob.ServiceType))
+        {
+            customer.Jobs.Add(newJob);
+            CancelJobForm();
+        }
+    }
+
+    private void SaveJob(int index)
+    {
+        // Job is already updated via binding.
+        Console.WriteLine($"Job {index} saved for customer {customer?.Name}");
     }
 
     private void HandleValidSubmit()
     {
-        CustomerService.Update(customer!);
-        NavigationManager.NavigateTo("/customers");
+        if (customer is not null)
+        {
+            CustomerService.Update(customer);
+            NavigationManager.NavigateTo("/");
+        }
     }
 }
