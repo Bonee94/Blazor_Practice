@@ -1,0 +1,71 @@
+@page "/customers/add"
+@inject CustomerService CustomerService
+@inject NavigationManager NavigationManager
+@inject ServiceTypeService ServiceTypeService
+
+@using Microsoft.AspNetCore.Components.Forms
+
+<h3>Add Customer</h3>
+
+<EditForm Model="newCustomer" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label>Name</label>
+        <InputText class="form-control" @bind-Value="newCustomer.Name" />
+    </div>
+    <div class="mb-3">
+        <label>Email</label>
+        <InputText class="form-control" @bind-Value="newCustomer.Email" />
+    </div>
+    <div class="mb-3">
+        <label>Phone</label>
+        <InputText class="form-control" @bind-Value="newCustomer.Phone" />
+    </div>
+    <div class="mb-3">
+        <label>Service Type</label>
+        <InputSelect class="form-control" @bind-Value="newCustomer.ServiceType">
+            <option value="">-- Select a service --</option>
+            @foreach (var service in serviceTypes)
+            {
+                <option value="@service.Name">@service.Name</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="mb-3">
+        <label>Notes</label>
+        <InputTextArea class="form-control" @bind-Value="newCustomer.Notes" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Save</button>
+    <a href="/customers" class="btn btn-secondary ms-2">Cancel</a>
+</EditForm>
+
+@code {
+    private Customer newCustomer = new()
+    {
+        Name = "",
+        Email = "",
+        Phone = "",
+        ServiceType = "",
+        Notes = ""
+    };
+
+    private List<ServiceType> serviceTypes = new();
+
+    protected override void OnInitialized()
+    {
+        serviceTypes = ServiceTypeService.GetAll();
+    }
+
+    private void HandleValidSubmit()
+    {
+        if (newCustomer is not null)
+        {
+            CustomerService.Add(newCustomer);
+            NavigationManager.NavigateTo("/customers");
+        }
+    }
+}
