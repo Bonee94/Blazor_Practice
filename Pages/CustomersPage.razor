@@ -1,5 +1,6 @@
-@page "/customers"
+@page "/"
 @inject CustomerService CustomerService
+@inject ServiceTypeService ServiceTypeService
 
 <h3>Customers</h3>
 
@@ -12,17 +13,162 @@
 else
 {
     <ul class="list-group mt-3">
-        @foreach (var customer in CustomerService.GetAll())
+        @foreach (var customer in CustomerService.GetAll().OrderByDescending(c => c.Id))
         {
-            <li class="list-group-item">
-                <strong>@customer.Name</strong> &nbsp;
-                <a href="/customers/edit/@customer.Id">Edit</a>
-                <br />
-                <span style="font-size: 14px;">@customer.Email | @customer.Phone</span>
-                <br />
-                <strong style="font-size: 14px;"><em>Service: @customer.ServiceType</em></strong>
-                <p style="font-size: 12px;">@customer.Notes</p>
+            <li class="list-group-item mb-3 p-3 border rounded bg-primary shadow-sm bg-opacity-25">
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Left column: customer info -->
+                            <div class="col-md-5">
+                                <h5 class="card-title">@customer.Name @customer.Id</h5>
+                                <p class="mb-1"><strong>Email:</strong> @customer.Email</p>
+                                <p class="mb-1"><strong>Phone:</strong> @customer.Phone</p>
+                                <a href="/customers/edit/@customer.Id" class="btn btn-sm btn-primary mt-2">Edit</a>
+                                <button class="btn btn-sm btn-primary mt-2"
+                                    @onclick="@(() => toggleShowJobCancel(customer.Id))">
+                                    <i class="bi bi-plus-circle me-1"></i> @(showJobFormMap.ContainsKey(customer.Id) &&
+                                                                showJobFormMap[customer.Id] ? "Cancel" : "Add Job")
+                        </button>
+                        <button class="btn btn-danger btn-sm mt-2" @onclick="() => DeleteCustomer(customer.Id)">
+                            Delete
+                        </button>
+
+                        @if (showJobFormMap.ContainsKey(customer.Id) && showJobFormMap[customer.Id])
+                                {
+                                    var job = newJobs[customer.Id];
+
+                                    <EditForm Model="@job" OnValidSubmit="@(() => AddJob(customer.Id))">
+                                        <DataAnnotationsValidator />
+                                        <ValidationSummary />
+
+                                        <div class="border p-3 mb-3 bg-white rounded">
+                                            <div class="mb-2">
+                                                <label>Date Completed</label>
+                                                <InputDate class="form-control" @bind-Value="job.DateCompleted" />
+                                            </div>
+
+                                            <div class="mb-2">
+                                                <label>Service Type</label>
+                                                <InputSelect class="form-control" @bind-Value="job.ServiceType">
+                                                    <option value="">-- Select a service --</option>
+                                                    @foreach (var service in serviceTypes)
+                                                    {
+                                                        <option value="@service.Name">@service.Name</option>
+                                                    }
+                                                </InputSelect>
+                                            </div>
+
+                                            <div class="mb-2">
+                                                <label>Note</label>
+                                                <InputTextArea class="form-control" @bind-Value="job.Note" />
+                                            </div>
+
+                                            <button type="submit" class="btn btn-success btn-sm me-2">Save Job</button>
+                                            <button type="button" class="btn btn-secondary btn-sm"
+                                                @onclick="@(() => CancelJobForm(customer.Id))">Cancel</button>
+                                        </div>
+                                    </EditForm>
+                                }
+                            </div>
+
+                            <!-- Right column: job history -->
+                            <div class="col-md-7">
+                                <h6 class="mb-2">Jobs</h6>
+                                @if (customer.Jobs.Any())
+                                {
+                                    <ul class="list-unstyled mb-0">
+                                        @foreach (var job in customer.Jobs.OrderByDescending(j => j.DateCompleted))
+                                        {
+                                            <li class="mb-2 d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <strong>@job.DateCompleted.ToString("MMM dd, yyyy")</strong> –
+                                                    <em>@job.ServiceType</em><br />
+                                                    <span style="font-size: 13px;">@job.Note</span>
+                                                </div>
+                                                <button class="btn btn-sm btn-outline-danger ms-2" title="Delete Job"
+                                                    @onclick="() => DeleteJob(customer.Id, job)">
+                                                    <i class="bi-trash"></i>
+                                                </button>
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <p class="text-muted"><em>No jobs yet.</em></p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </li>
         }
     </ul>
+}
+
+@code {
+    private Dictionary<int, bool> showJobFormMap = new();
+    private Dictionary<int, Job> newJobs = new();
+    private List<ServiceType> serviceTypes = new();
+
+    protected override void OnInitialized()
+    {
+        serviceTypes = ServiceTypeService.GetAll();
+    }
+
+    private void toggleShowJobCancel(int customerId)
+    {
+        if (showJobFormMap.ContainsKey(customerId) && showJobFormMap[customerId])
+        {
+            CancelJobForm(customerId);
+        }
+        else
+        {
+            ShowJobForm(customerId);
+        }
+    }
+    private void ShowJobForm(int customerId)
+    {
+        showJobFormMap[customerId] = true;
+        newJobs[customerId] = new Job
+        {
+            DateCompleted = DateTime.Today,
+            ServiceType = "",
+            Note = ""
+        };
+    }
+
+    private void CancelJobForm(int customerId)
+    {
+        showJobFormMap[customerId] = false;
+    }
+
+    private void AddJob(int customerId)
+    {
+        if (newJobs.TryGetValue(customerId, out var job))
+        {
+            var customer = CustomerService.GetById(customerId);
+            if (customer != null)
+            {
+                customer.Jobs.Add(job);
+                showJobFormMap[customerId] = false;
+            }
+        }
+    }
+
+    private void DeleteJob(int customerId, Job job)
+    {
+        var customer = CustomerService.GetById(customerId);
+        if (customer != null)
+        {
+            customer.Jobs.Remove(job);
+        }
+    }
+
+    private void DeleteCustomer(int id)
+    {
+        CustomerService.Delete(id);
+    }
+
 }
