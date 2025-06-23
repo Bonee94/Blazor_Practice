@@ -1,0 +1,72 @@
+@inject ServiceTypeService ServiceTypeService
+
+<div class="card mb-3 shadow-sm">
+    <div class="card-body">
+        <div class="row">
+            <!-- Left: Info and controls -->
+            <div class="col-md-5">
+                <h5 class="card-title">@Customer.Name</h5>
+                <p><strong>Email:</strong> @Customer.Email</p>
+                <p><strong>Phone:</strong> @Customer.Phone</p>
+                <a href="/customers/edit/@Customer.Id" class="btn btn-sm btn-primary mt-2">Edit</a>
+
+                <button class="btn btn-sm btn-primary mt-2" @onclick="ToggleJobForm">
+                    <i class="bi bi-plus-circle me-1"></i>
+                    @(ShowJobForm ? "Cancel" : "Add Job")
+                </button>
+
+                <button class="btn btn-danger btn-sm mt-2" @onclick=" async () => await OnDeleteCustomer.InvokeAsync(Customer.Id)">
+                    Delete
+                </button>
+
+                @if (ShowJobForm)
+                {
+                    <AddJobForm Job="NewJob" ServiceTypes="ServiceTypes" OnSubmit="HandleAddJob"
+                        OnCancel="() => ShowJobForm = false" />
+                }
+            </div>
+
+            <!-- Right: Job history -->
+            <div class="col-md-7">
+                <JobList Jobs="Customer.Jobs" OnDelete="async (job) => await OnDeleteJob.InvokeAsync((Customer.Id, job))" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public Customer Customer { get; set; } = default!;
+    [Parameter] public EventCallback<int> OnDeleteCustomer { get; set; }
+    [Parameter] public EventCallback<(int, Job)> OnDeleteJob { get; set; }
+    [Parameter] public EventCallback<(int, Job)> OnAddJob { get; set; }
+
+    private bool ShowJobForm { get; set; }
+    private Job NewJob = new();
+    private List<ServiceType> ServiceTypes = new();
+
+    protected override void OnInitialized()
+    {
+        ServiceTypes = ServiceTypeService.GetAll();
+    }
+
+    private void ToggleJobForm()
+    {
+        ShowJobForm = !ShowJobForm;
+
+        if (ShowJobForm)
+        {
+            NewJob = new Job
+            {
+                DateCompleted = DateTime.Today,
+                ServiceType = "",
+                Note = ""
+            };
+        }
+    }
+
+    private async Task HandleAddJob()
+    {
+        await OnAddJob.InvokeAsync((Customer.Id, NewJob));
+        ShowJobForm = false;
+    }
+}
