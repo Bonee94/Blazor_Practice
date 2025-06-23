@@ -25,7 +25,7 @@
     </div>
     <div class="mb-3">
         <label>Service Type</label>
-        <InputSelect class="form-control" @bind-Value="newCustomer.ServiceType">
+        <InputSelect class="form-control" @bind-Value="newJob.ServiceType">
             <option value="">-- Select a service --</option>
             @foreach (var service in serviceTypes)
             {
@@ -36,11 +36,11 @@
 
     <div class="mb-3">
         <label>Notes</label>
-        <InputTextArea class="form-control" @bind-Value="newCustomer.Notes" />
+        <InputTextArea class="form-control" @bind-Value="newJob.Note" />
     </div>
 
     <button type="submit" class="btn btn-success">Save</button>
-    <a href="/customers" class="btn btn-secondary ms-2">Cancel</a>
+    <a href="/" class="btn btn-secondary ms-2">Cancel</a>
 </EditForm>
 
 @code {
@@ -49,8 +49,14 @@
         Name = "",
         Email = "",
         Phone = "",
+        Jobs = new()
+    };
+
+    private Job newJob = new()
+    {
         ServiceType = "",
-        Notes = ""
+        Note = "",
+        DateCompleted = DateTime.Today
     };
 
     private List<ServiceType> serviceTypes = new();
@@ -62,10 +68,8 @@
 
     private void HandleValidSubmit()
     {
-        if (newCustomer is not null)
-        {
-            CustomerService.Add(newCustomer);
-            NavigationManager.NavigateTo("/customers");
-        }
+        newCustomer.Jobs.Add(newJob);
+        CustomerService.Add(newCustomer);
+        NavigationManager.NavigateTo("/");
     }
 }
