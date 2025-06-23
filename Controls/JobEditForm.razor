@@ -1,0 +1,43 @@
+@using Microsoft.AspNetCore.Components.Forms
+@inherits OwningComponentBase
+
+<EditForm Model="Job" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="border p-3 mb-3 bg-light rounded">
+        <div class="mb-2">
+            <label>Date Completed</label>
+            <InputDate class="form-control" @bind-Value="Job.DateCompleted" />
+        </div>
+
+        <div class="mb-2">
+            <label>Service Type</label>
+            <InputSelect class="form-control" @bind-Value="Job.ServiceType">
+                <option value="">-- Select a service --</option>
+                @foreach (var service in ServiceTypes)
+                {
+                    <option value="@service.Name">@service.Name</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="mb-2">
+            <label>Note</label>
+            <InputTextArea class="form-control" @bind-Value="Job.Note" />
+        </div>
+
+        <button type="submit" class="btn btn-success btn-sm me-2">Save Job</button>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter] public Job Job { get; set; } = new();
+    [Parameter] public List<ServiceType> ServiceTypes { get; set; } = new();
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+    private async Task HandleSubmit()
+    {
+        await OnValidSubmit.InvokeAsync();
+    }
+}
