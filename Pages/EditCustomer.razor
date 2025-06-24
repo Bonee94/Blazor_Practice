@@ -49,8 +49,7 @@ else
 
 
         <button type="submit" class="btn btn-success">Save Customer</button>
-        @* <a href="/Blazor_Practice/" class="btn btn-secondary ms-2">Cancel</a> *@
-        <a href="/" class="btn btn-secondary ms-2">Cancel</a>
+        <a href="" class="btn btn-secondary ms-2">Cancel</a>
     </EditForm>
     <br />
 }
@@ -96,7 +95,7 @@ else
 
     private void SaveJob(int index)
     {
-        // Job is already updated via binding.
+        // Job is already updated via submission in edit job component
         Console.WriteLine($"Job {index} saved for customer {customer?.Name}");
     }
 
@@ -105,8 +104,7 @@ else
         if (customer is not null)
         {
             CustomerService.Update(customer);
-            @* NavigationManager.NavigateTo("/Blazor_Practice/"); *@
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo("");
         }
     }
 }

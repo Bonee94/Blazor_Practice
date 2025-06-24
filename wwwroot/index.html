@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BlazorDemoApp</title>
-    <base href="/Blazor_Practice" />
+    <title>Mini CRM</title>
+    <base href="/" />
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
@@ -30,5 +30,13 @@
       <span class="dismiss">🗙</span>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
+    <script>
+      function formatPhone(input) {
+        let digits = input.value.replace(/\D/g, "");
+        if (digits.length === 10) {
+          input.value = digits.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+        }
+      }
+    </script>
   </body>
 </html>
