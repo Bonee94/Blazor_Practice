@@ -1,0 +1,29 @@
+<h6 class="mb-2">Jobs</h6>
+@if (Jobs.Any())
+{
+    <ul class="list-unstyled mb-0">
+        @foreach (var job in Jobs.OrderByDescending(j => j.DateCompleted))
+        {
+            <li class="mb-2 d-flex justify-content-between align-items-start">
+                <div>
+                    <strong>@job.DateCompleted.ToString("MMM dd, yyyy")</strong> –
+                    <em>@job.ServiceType</em><br />
+                    <span style="font-size: 13px;">@job.Note</span>
+                </div>
+                <button class="btn btn-sm btn-outline-danger ms-2" title="Delete Job"
+                        @onclick="() => OnDelete.InvokeAsync(job)">
+                    <i class="bi-trash"></i>
+                </button>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p class="text-muted"><em>No jobs yet.</em></p>
+}
+
+@code {
+    [Parameter] public List<Job> Jobs { get; set; } = new();
+    [Parameter] public EventCallback<Job> OnDelete { get; set; }
+}
