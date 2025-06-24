@@ -3,11 +3,7 @@
 @inject NavigationManager NavigationManager
 @inject ServiceTypeService ServiceTypeService
 
-@using Microsoft.AspNetCore.Components.Forms
-
-<h3>Add Customer</h3>
-
-<EditForm Model="newCustomer" OnValidSubmit="HandleValidSubmit">
+<EditForm EditContext="_customerEditContext" OnSubmit="HandleCustomerSubmit">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
@@ -21,55 +17,52 @@
     </div>
     <div class="mb-3">
         <label>Phone</label>
-        <InputText class="form-control" @bind-Value="newCustomer.Phone" />
+        <input class="form-control" type="tel" @bind="newCustomer.Phone" maxlength="12"
+            oninput="this.value=this.value.replace(/[^0-9\-]/g,'')" onblur="formatPhone(this)" />
     </div>
-    <div class="mb-3">
-        <label>Service Type</label>
-        <InputSelect class="form-control" @bind-Value="newJob.ServiceType">
-            <option value="">-- Select a service --</option>
-            @foreach (var service in serviceTypes)
-            {
-                <option value="@service.Name">@service.Name</option>
-            }
-        </InputSelect>
-    </div>
-
-    <div class="mb-3">
-        <label>Notes</label>
-        <InputTextArea class="form-control" @bind-Value="newJob.Note" />
-    </div>
+    <AddNewCustomerJobForm @ref="jobFormRef" Job="newJob" ServiceTypes="serviceTypes" />
 
     <button type="submit" class="btn btn-success">Save</button>
-    <a href="/" class="btn btn-secondary ms-2">Cancel</a>
 </EditForm>
 
 @code {
-    private Customer newCustomer = new()
-    {
-        Name = "",
-        Email = "",
-        Phone = "",
-        Jobs = new()
-    };
-
-    private Job newJob = new()
-    {
-        ServiceType = "",
-        Note = "",
-        DateCompleted = DateTime.Today
-    };
-
+    private Customer newCustomer = new() { Jobs = new() };
+    private Job newJob = new() { DateCompleted = DateTime.Today };
     private List<ServiceType> serviceTypes = new();
+
+    private AddNewCustomerJobForm? jobFormRef;
+    private EditContext _customerEditContext = default!;
 
     protected override void OnInitialized()
     {
         serviceTypes = ServiceTypeService.GetAll();
+        _customerEditContext = new EditContext(newCustomer);
     }
 
-    private void HandleValidSubmit()
+    private async Task HandleCustomerSubmit()
     {
-        newCustomer.Jobs.Add(newJob);
+        if (jobFormRef is null)
+            return;
+
+        bool jobValid = await jobFormRef.ValidateAndReturnJobAsync();
+        bool customerValid = _customerEditContext.Validate();
+
+        if (!jobValid)
+            return;
+
+        // Only add the job if it's not already in the customer's job list
+        if (!newCustomer.Jobs.Contains(newJob))
+        {
+            newCustomer.Jobs.Add(newJob);
+        }
+
+        customerValid = _customerEditContext.Validate();
+
+        if (!customerValid)
+            return;
+
         CustomerService.Add(newCustomer);
-        NavigationManager.NavigateTo("/");
+        NavigationManager.NavigateTo("");
     }
+
 }
