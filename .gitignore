@@ -6,3 +6,4 @@ obj/
 dist/
 publish/
 bin/
+.task.md
