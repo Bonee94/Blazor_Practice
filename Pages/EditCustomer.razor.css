@@ -1,0 +1,6 @@
+#add-btn-hover-text {
+  color: #000000 !important;
+}
+#add-btn-hover-text:hover {
+  color: #ffffff !important;
+}

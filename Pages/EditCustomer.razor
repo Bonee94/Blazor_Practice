@@ -16,34 +16,51 @@ else
         <DataAnnotationsValidator />
         <ValidationSummary />
 
-        <div class="mb-3">
-            <label>Name</label>
-            <InputText class="form-control" @bind-Value="customer.Name" />
-        </div>
-        <div class="mb-3">
-            <label>Email</label>
-            <InputText class="form-control" @bind-Value="customer.Email" />
-        </div>
-        <div class="mb-3">
-            <label>Phone</label>
-            <InputText class="form-control" @bind-Value="customer.Phone" />
+        <div class="row my-3 pt-3 border rounded bg-primary shadow-sm bg-opacity-25">
+            <div class="col-12 col-md-6">
+                <div class="h-100">
+                    <div class="mb-3">
+                        <label>Name</label>
+                        <InputText class="form-control" @bind-Value="customer.Name" />
+                    </div>
+                    <div class="mb-3">
+                        <label>Email</label>
+                        <InputText class="form-control" @bind-Value="customer.Email" />
+                    </div>
+                    <div class="mb-3">
+                        <label>Phone</label>
+                        <InputText class="form-control" @bind-Value="customer.Phone" />
+                    </div>
+
+                    <button
+                        id="add-btn-hover-text"
+                        class="btn btn-sm mb-3 @(showJobForm ? "btn-outline-danger" : "btn-outline-primary") "
+                        type="button" @onclick="() => { if (showJobForm) CancelJobForm(); else ShowJobForm(); }">
+                        <i class="bi @(showJobForm ? "bi-x-circle" : "bi-plus-circle") me-1"></i>
+                        @(showJobForm ? "Cancel Job" : "Add Job")
+                    </button>
+
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <div class="h-100">
+                    @if (showJobForm)
+                    {
+                        <AddJobForm Job="newJob" ServiceTypes="serviceTypes" OnSubmit="AddJob" OnCancel="CancelJobForm" />
+                    }
+                </div>
+            </div>
         </div>
 
-        <button class="btn btn-sm btn-outline-primary mb-3" type="button" @onclick="ShowJobForm">
-            <i class="bi bi-plus-circle me-1"></i> Add Job
-        </button>
-
-        @if (showJobForm)
-        {
-            <AddJobForm Job="newJob" ServiceTypes="serviceTypes" OnSubmit="AddJob" OnCancel="CancelJobForm" />
-        }
 
         @if (customer.Jobs?.Count > 0)
         {
             <h5>Job History</h5>
             @foreach (var job in customer.Jobs.OrderByDescending(j => j.DateCompleted))
             {
-                <JobEditForm  @key="job" Job="job" ServiceTypes="serviceTypes" OnValidSubmit="@(() => SaveJob(customer.Jobs.IndexOf(job)))" />
+                <JobEditForm @key="job" Job="job" ServiceTypes="serviceTypes"
+                    OnValidSubmit="@(() => SaveJob(customer.Jobs.IndexOf(job)))" />
             }
         }
 

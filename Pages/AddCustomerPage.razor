@@ -3,24 +3,37 @@
 @inject NavigationManager NavigationManager
 @inject ServiceTypeService ServiceTypeService
 
+<h3>Add Customer</h3>
 <EditForm EditContext="_customerEditContext" OnSubmit="HandleCustomerSubmit">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <div class="mb-3">
-        <label>Name</label>
-        <InputText class="form-control" @bind-Value="newCustomer.Name" />
+    <div class="row my-3 pt-3 border rounded bg-secondary shadow-sm bg-opacity-10">
+        <div class="col-12 col-md-6">
+            <div class="h-100">
+                <div class="mb-3">
+                    <label>Name</label>
+                    <InputText class="form-control" @bind-Value="newCustomer.Name" />
+                </div>
+                <div class="mb-3">
+                    <label>Email</label>
+                    <InputText class="form-control" @bind-Value="newCustomer.Email" />
+                </div>
+                <div class="mb-3">
+                    <label>Phone</label>
+                    <input class="form-control" type="tel" @bind="newCustomer.Phone" maxlength="12"
+                        oninput="this.value=this.value.replace(/[^0-9\-]/g,'')" onblur="formatPhone(this)" />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <div class="h-100">
+                <AddNewCustomerJobForm @ref="jobFormRef" Job="newJob" ServiceTypes="serviceTypes" />
+            </div>
+        </div>
     </div>
-    <div class="mb-3">
-        <label>Email</label>
-        <InputText class="form-control" @bind-Value="newCustomer.Email" />
-    </div>
-    <div class="mb-3">
-        <label>Phone</label>
-        <input class="form-control" type="tel" @bind="newCustomer.Phone" maxlength="12"
-            oninput="this.value=this.value.replace(/[^0-9\-]/g,'')" onblur="formatPhone(this)" />
-    </div>
-    <AddNewCustomerJobForm @ref="jobFormRef" Job="newJob" ServiceTypes="serviceTypes" />
+
 
     <button type="submit" class="btn btn-success">Save</button>
 </EditForm>
