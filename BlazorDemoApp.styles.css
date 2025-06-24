@@ -160,3 +160,10 @@ main[b-eh5s3jzia4] {
         overflow-y: auto;
     }
 }
+/* /Pages/EditCustomer.razor.rz.scp.css */
+#add-btn-hover-text[b-vhvndinqbb] {
+  color: #000000 !important;
+}
+#add-btn-hover-text:hover[b-vhvndinqbb] {
+  color: #ffffff !important;
+}
