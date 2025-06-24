@@ -14,7 +14,7 @@ else
     <ul class="list-group mt-3">
         @foreach (var customer in CustomerService.GetAll().OrderByDescending(c => c.Id))
         {
-            <li class="list-group-item mb-3 p-3 border rounded bg-primary shadow-sm bg-opacity-25">
+            <li @key=customer.Id class="list-group-item mb-3 p-3 border rounded bg-primary shadow-sm bg-opacity-25">
                 <CustomerCard Customer="customer" 
                     OnAddJob="HandleAddJob" 
                     OnDeleteJob="HandleDeleteJob"

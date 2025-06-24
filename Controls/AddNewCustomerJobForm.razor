@@ -15,7 +15,7 @@
                 <option value="">-- Select a service --</option>
                 @foreach (var service in ServiceTypes)
                 {
-                    <option value="@service.Name">@service.Name</option>
+                    <option @key=service value="@service.Name">@service.Name</option>
                 }
             </InputSelect>
         </div>

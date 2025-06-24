@@ -43,7 +43,7 @@ else
             <h5>Job History</h5>
             @foreach (var job in customer.Jobs.OrderByDescending(j => j.DateCompleted))
             {
-                <JobEditForm Job="job" ServiceTypes="serviceTypes" OnValidSubmit="@(() => SaveJob(customer.Jobs.IndexOf(job)))" />
+                <JobEditForm  @key="job" Job="job" ServiceTypes="serviceTypes" OnValidSubmit="@(() => SaveJob(customer.Jobs.IndexOf(job)))" />
             }
         }
 
@@ -90,6 +90,7 @@ else
         {
             customer.Jobs.Add(newJob);
             CancelJobForm();
+            StateHasChanged();
         }
     }
 

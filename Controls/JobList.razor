@@ -4,7 +4,7 @@
     <ul class="list-unstyled mb-0">
         @foreach (var job in Jobs.OrderByDescending(j => j.DateCompleted))
         {
-            <li class="mb-2 d-flex justify-content-between align-items-start">
+            <li @key=job class="mb-2 d-flex justify-content-between align-items-start">
                 <div>
                     <strong>@job.DateCompleted.ToString("MMM dd, yyyy")</strong> –
                     <em>@job.ServiceType</em><br />
