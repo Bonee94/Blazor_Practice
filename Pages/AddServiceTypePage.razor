@@ -19,18 +19,22 @@
     <a href="" class="btn btn-secondary ms-2">Cancel</a>
 </EditForm>
 
+<ServiceTypeList @ref="listRef" />
+
 @code {
     private ServiceType newService = new()
     {
         Name = ""
     };
+    private ServiceTypeList? listRef;
 
     private void HandleValidSubmit()
     {
         if (!string.IsNullOrWhiteSpace(newService.Name))
         {
             ServiceTypeService.Add(newService);
-            NavigationManager.NavigateTo("");
+            newService = new(); // reset form
+            listRef?.Refresh(); // refresh the child list
         }
     }
 }
