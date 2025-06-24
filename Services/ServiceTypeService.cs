@@ -19,6 +19,15 @@ public class ServiceTypeService
         serviceTypes.Add(service);
     }
 
+    public void Delete(string name)
+    {
+        var service = serviceTypes.FirstOrDefault(s => s.Name == name);
+        if (service != null)
+        {
+            serviceTypes.Remove(service);
+        }
+    }
+
     private void SeedServices()
     {
         string[] defaultNames = [
